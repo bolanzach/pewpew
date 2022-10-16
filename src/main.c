@@ -8,13 +8,8 @@
 #include "mesh.h"
 #include "vector.h"
 
-// const int POINTS_SIZE = 9 * 9 * 9;
-// Vector3 cube_points[POINTS_SIZE];
-// Vector2 projected_points[POINTS_SIZE];
 float field_of_view_factor = 640;
-
-Vector3 camera_position = { .x = 0, .y = 0, .z = -6 };
-
+Vector3 camera_position = { .x = 0, .y = 0, .z = -5 };
 Vector3 cube_rotation = { .x = 0, .y = 0, .z = 0 };
 
 Triangle2 triangles_to_render[NUMBER_MESH_FACES];
@@ -23,6 +18,7 @@ bool is_running = false;
 uint previous_frame_time = 0;
 
 void setup(void) {
+    // *** This is where we allocate memory to hold all the pixels ***
     color_buffer = (uint32_t*) malloc(sizeof(uint32_t) * window_width * window_height);
     
     // Texture used to display the color_buffer
@@ -35,6 +31,7 @@ void setup(void) {
     );
 }
 
+// Receives a 3D point and projects it to a 2D point
 Vector2 project(Vector3 point) {
     Vector2 projected_point = {
         .x = (point.x * field_of_view_factor) / point.z,
@@ -70,12 +67,12 @@ void update(void) {
 
     previous_frame_time = SDL_GetTicks();
 
-    cube_rotation.y += 0.01;
     cube_rotation.x += 0.01;
+    cube_rotation.y += 0.01;
     cube_rotation.z += 0.01;
 
     // Iterate all the triangle faces in the mesh
-    for (int i = 0; i < NUMBER_MESH_FACES; i++) {
+    for (int i = 0; i < ARRAY_LENGTH(mesh_faces); i++) {
         Face mesh_face = mesh_faces[i];
 
         // The 3 vertices that make up this face
@@ -95,12 +92,12 @@ void update(void) {
             transformed_vertex = rotate_vector3_y(transformed_vertex, cube_rotation.y);
             transformed_vertex = rotate_vector3_z(transformed_vertex, cube_rotation.z);
 
-            // Translate away from the camera
+            // Translate the vertex away from the camera
             transformed_vertex.z -= camera_position.z;
 
             Vector2 projected_point = project(transformed_vertex);
 
-            // Scale and translate points to the middle of the screen
+            // Scale and translate the projected points to the middle of the screen
             projected_point.x += (window_width / 2);
             projected_point.y += (window_height / 2);
 
@@ -113,34 +110,22 @@ void update(void) {
 }
 
 void render(void) {
-    // Iterate each projected triangle and render them
-    for (int i = 0; i < NUMBER_MESH_FACES; i++) {
+    draw_grid();
+
+    // Iterate each projected triangle and render the points
+    for (int i = 0; i < ARRAY_LENGTH(triangles_to_render); i++) {
         Triangle2 triangle_to_render = triangles_to_render[i];
 
-        draw_rect(
+        draw_triangle(
             triangle_to_render.points[0].x,
             triangle_to_render.points[0].y,
-            3,
-            3,
-            0xFFFFFF00
-        );
-        draw_rect(
             triangle_to_render.points[1].x,
             triangle_to_render.points[1].y,
-            3,
-            3,
-            0xFFFFFF00
-        );
-        draw_rect(
             triangle_to_render.points[2].x,
             triangle_to_render.points[2].y,
-            3,
-            3,
             0xFFFFFF00
         );
     }
-
-    //draw_grid();
 
     render_color_buffer();
 

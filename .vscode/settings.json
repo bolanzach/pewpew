@@ -1,6 +1,9 @@
 {
   "files.associations": {
     "sdl.h": "c",
-    "mesh.h": "c"
+    "chrono": "c",
+    "cmath": "c",
+    "complex": "c",
+    "cstdlib": "c"
   }
 }

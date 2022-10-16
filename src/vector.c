@@ -32,7 +32,7 @@ Vector3 rotate_vector3_y(Vector3 vector, float angle) {
 Vector3 rotate_vector3_z(Vector3 vector, float angle) {
     Vector3 rotated_vector = {
         .x = vector.x * cos(angle) - vector.y * sin(angle),
-        .y = vector.x * sin(angle) - vector.y * cos(angle),
+        .y = vector.x * sin(angle) + vector.y * cos(angle),
         .z = vector.z
     };
     return rotated_vector;

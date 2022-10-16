@@ -10,7 +10,8 @@ typedef struct {
   int c;
 } Face;
 
-// Holds 3 Vector2. These are the actual (x,y) points on the screen
+// A Triangle is a collection of 3 Vector2 points.
+// These are the actual (x,y) points on the screen
 typedef struct {
   Vector2 points[3];
 } Triangle2;
