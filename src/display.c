@@ -65,11 +65,9 @@ void draw_rect(int x, int y, int width, int height, uint32_t color) {
 }
 
 void draw_grid() {
-    for (int y = 0; y < window_height; y++) {
-        for (int x = 0; x < window_width; x++) {
-            if (x % 100 == 0 || y % 100 == 0) {
-                draw_pixel(x, y, 0xFFFF000);
-            }
+    for (int y = 0; y < window_height; y += 10) {
+        for (int x = 0; x < window_width; x += 10) {
+            draw_pixel(x, y, 0xFF444444);
         }
     }
 }
