@@ -116,19 +116,15 @@ void render(void) {
     for (int i = 0; i < ARRAY_LENGTH(triangles_to_render); i++) {
         Triangle2 triangle_to_render = triangles_to_render[i];
 
-        draw_rect(triangle_to_render.points[0].x, triangle_to_render.points[0].y, 3, 3, 0xFFFFFF00);
-        draw_rect(triangle_to_render.points[1].x, triangle_to_render.points[1].y, 3, 3, 0xFFFFFF00);
-        draw_rect(triangle_to_render.points[2].x, triangle_to_render.points[2].y, 3, 3, 0xFFFFFF00);
-
-        // draw_triangle(
-        //     triangle_to_render.points[0].x,
-        //     triangle_to_render.points[0].y,
-        //     triangle_to_render.points[1].x,
-        //     triangle_to_render.points[1].y,
-        //     triangle_to_render.points[2].x,
-        //     triangle_to_render.points[2].y,
-        //     0xFFFFFF00
-        // );
+        draw_triangle(
+            triangle_to_render.points[0].x,
+            triangle_to_render.points[0].y,
+            triangle_to_render.points[1].x,
+            triangle_to_render.points[1].y,
+            triangle_to_render.points[2].x,
+            triangle_to_render.points[2].y,
+            0xFFFFFF00
+        );
     }
 
     render_color_buffer();
