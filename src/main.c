@@ -35,6 +35,7 @@ void setup(void) {
     );
 }
 
+// Receives a 3d point and projects it to a 2D point
 Vector2 project(Vector3 point) {
     Vector2 projected_point = {
         .x = (point.x * field_of_view_factor) / point.z,
@@ -75,7 +76,7 @@ void update(void) {
     cube_rotation.z += 0.01;
 
     // Iterate all the triangle faces in the mesh
-    for (int i = 0; i < NUMBER_MESH_FACES; i++) {
+    for (int i = 0; i < ARRAY_LENGTH(mesh_faces); i++) {
         Face mesh_face = mesh_faces[i];
 
         // The 3 vertices that make up this face
@@ -113,29 +114,39 @@ void update(void) {
 }
 
 void render(void) {
-    // Iterate each projected triangle and render them
-    for (int i = 0; i < NUMBER_MESH_FACES; i++) {
+    // Iterate each projected triangle and render the points
+    for (int i = 0; i < ARRAY_LENGTH(triangles_to_render); i++) {
         Triangle2 triangle_to_render = triangles_to_render[i];
 
-        draw_rect(
+        // draw_rect(
+        //     triangle_to_render.points[0].x,
+        //     triangle_to_render.points[0].y,
+        //     3,
+        //     3,
+        //     0xFFFFFF00
+        // );
+        // draw_rect(
+        //     triangle_to_render.points[1].x,
+        //     triangle_to_render.points[1].y,
+        //     3,
+        //     3,
+        //     0xFFFFFF00
+        // );
+        // draw_rect(
+        //     triangle_to_render.points[2].x,
+        //     triangle_to_render.points[2].y,
+        //     3,
+        //     3,
+        //     0xFFFFFF00
+        // );
+
+        draw_triangle(
             triangle_to_render.points[0].x,
             triangle_to_render.points[0].y,
-            3,
-            3,
-            0xFFFFFF00
-        );
-        draw_rect(
             triangle_to_render.points[1].x,
             triangle_to_render.points[1].y,
-            3,
-            3,
-            0xFFFFFF00
-        );
-        draw_rect(
             triangle_to_render.points[2].x,
             triangle_to_render.points[2].y,
-            3,
-            3,
             0xFFFFFF00
         );
     }
