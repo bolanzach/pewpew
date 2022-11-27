@@ -4,6 +4,8 @@
     "chrono": "c",
     "cmath": "c",
     "complex": "c",
-    "cstdlib": "c"
+    "cstdlib": "c",
+    "vector.h": "c",
+    "mesh.h": "c"
   }
 }

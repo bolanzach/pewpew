@@ -73,10 +73,13 @@ void draw_grid() {
 }
 
 void draw_line_dda(int x0, int y0, int x1, int y1, u_int32_t color) {
+    // Run
     int delta_x = x1 - x0;
+
+    // Rise
     int delta_y = y1 - y0;
 
-    // which side (x, y) is longer
+    // which side (x | y) is longer
     int longest_side_length = abs(delta_x) >= abs(delta_y) ? abs(delta_x) : abs(delta_y);
 
     // How much should we increment x and y
@@ -119,7 +122,6 @@ void clear_color_buffer(uint32_t color) {
 }
 
 void destroy_window(void) {
-    free(color_buffer);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

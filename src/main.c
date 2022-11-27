@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
+#include "array.h"
 #include "util.h"
 #include "display.h"
 #include "mesh.h"
@@ -10,9 +11,9 @@
 
 float field_of_view_factor = 640;
 Vector3 camera_position = { .x = 0, .y = 0, .z = -5 };
-Vector3 cube_rotation = { .x = 0, .y = 0, .z = 0 };
 
-Triangle2 triangles_to_render[NUMBER_MESH_FACES];
+/// The triangles that are rendered in each frame
+Triangle2* triangles_to_render = NULL;
 
 bool is_running = false;
 uint previous_frame_time = 0;
@@ -29,6 +30,8 @@ void setup(void) {
         window_width,
         window_height
     );
+
+    load_cube_mesh_data();
 }
 
 // Receives a 3D point and projects it to a 2D point
@@ -67,19 +70,23 @@ void update(void) {
 
     previous_frame_time = SDL_GetTicks();
 
-    cube_rotation.x += 0.01;
-    cube_rotation.y += 0.01;
-    cube_rotation.z += 0.01;
+    // Initialize array of triangles that we will render
+    triangles_to_render = NULL;
+
+    global_mesh.rotation.x += 0.01;
+    global_mesh.rotation.y += 0.01;
+    global_mesh.rotation.z += 0.01;
 
     // Iterate all the triangle faces in the mesh
-    for (int i = 0; i < ARRAY_LENGTH(mesh_faces); i++) {
-        Face mesh_face = mesh_faces[i];
+    int number_mesh_faces = array_length(global_mesh.faces);
+    for (int i = 0; i < number_mesh_faces; i++) {
+        Face mesh_face = global_mesh.faces[i];
 
         // The 3 vertices that make up this face
         Vector3 face_vertices[3] = {
-            mesh_vertices[mesh_face.a - 1],
-            mesh_vertices[mesh_face.b - 1],
-            mesh_vertices[mesh_face.c - 1]
+            global_mesh.vertices[mesh_face.a - 1],
+            global_mesh.vertices[mesh_face.b - 1],
+            global_mesh.vertices[mesh_face.c - 1]
         };
 
         Triangle2 projected_triangle;
@@ -88,9 +95,9 @@ void update(void) {
         for (int j = 0; j < ARRAY_LENGTH(face_vertices); j++) {
             Vector3 transformed_vertex = face_vertices[j];
 
-            transformed_vertex = rotate_vector3_x(transformed_vertex, cube_rotation.x);
-            transformed_vertex = rotate_vector3_y(transformed_vertex, cube_rotation.y);
-            transformed_vertex = rotate_vector3_z(transformed_vertex, cube_rotation.z);
+            transformed_vertex = rotate_vector3_x(transformed_vertex, global_mesh.rotation.x);
+            transformed_vertex = rotate_vector3_y(transformed_vertex, global_mesh.rotation.y);
+            transformed_vertex = rotate_vector3_z(transformed_vertex, global_mesh.rotation.z);
 
             // Translate the vertex away from the camera
             transformed_vertex.z -= camera_position.z;
@@ -105,7 +112,7 @@ void update(void) {
         }
 
         // Save the projected triangle to our triangles that we are going to render
-        triangles_to_render[i] = projected_triangle;
+        array_push(triangles_to_render, projected_triangle);
     }
 }
 
@@ -113,7 +120,8 @@ void render(void) {
     draw_grid();
 
     // Iterate each projected triangle and render the points
-    for (int i = 0; i < ARRAY_LENGTH(triangles_to_render); i++) {
+    int num_triangles = array_length(triangles_to_render);
+    for (int i = 0; i < num_triangles; i++) {
         Triangle2 triangle_to_render = triangles_to_render[i];
 
         draw_triangle(
@@ -123,15 +131,24 @@ void render(void) {
             triangle_to_render.points[1].y,
             triangle_to_render.points[2].x,
             triangle_to_render.points[2].y,
-            0xFFFFFF00
+            0xFF00FF00
         );
     }
+
+    // Clear triangels
+    array_free(triangles_to_render);
 
     render_color_buffer();
 
     clear_color_buffer(0xFF000000);
 
     SDL_RenderPresent(renderer);
+}
+
+void free_resources(void) {
+    free(color_buffer);
+    array_free(global_mesh.faces);
+    array_free(global_mesh.vertices);
 }
 
 
@@ -150,6 +167,7 @@ int main(void) {
 
     printf("done\n");
     destroy_window();
+    free_resources();
 
     return 0;
 }
