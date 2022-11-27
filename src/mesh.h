@@ -12,6 +12,8 @@ extern Vector3 cube_vertices[NUMBER_CUBE_VERTICES];
 #define NUMBER_CUBE_FACES (6 * 2)
 extern Face cube_faces[NUMBER_CUBE_FACES];
 
+void load_obj_file_data(char* file_name);
+
 void load_cube_mesh_data(void);
 
 typedef struct {

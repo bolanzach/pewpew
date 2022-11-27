@@ -31,7 +31,8 @@ void setup(void) {
         window_height
     );
 
-    load_cube_mesh_data();
+    //load_cube_mesh_data();
+    load_obj_file_data("./assets/free_car_001.obj");
 }
 
 // Receives a 3D point and projects it to a 2D point
