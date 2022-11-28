@@ -6,7 +6,7 @@
 Mesh global_mesh = {
   .vertices = NULL,
   .faces = NULL,
-  .rotation = { 0, 0, 0 }
+  .rotation = { 9.5, 0, 0 }
 };
 
 Vector3 cube_vertices[NUMBER_CUBE_VERTICES] = {
@@ -52,6 +52,8 @@ void load_obj_file_data(char* file_name) {
 
   // TODO error handling
 
+  printf("Reading .obj file: %s\n", file_name);
+
   char line[1024];
   while (fgets(line, 1024, file)) {
     // Vertex data
@@ -82,7 +84,6 @@ void load_obj_file_data(char* file_name) {
 
       array_push(global_mesh.faces, face);
     }
-    printf("%s", line);
   }
 }
 

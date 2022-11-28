@@ -74,11 +74,11 @@ void update(void) {
     // Initialize array of triangles that we will render
     triangles_to_render = NULL;
 
-    global_mesh.rotation.x += 0.01;
-    global_mesh.rotation.y += 0.01;
-    global_mesh.rotation.z += 0.01;
+    global_mesh.rotation.x += 0.0;
+    global_mesh.rotation.y += 0.05;
+    global_mesh.rotation.z += 0.0;
 
-    // Iterate all the triangle faces in the mesh
+    // Iterate all the faces in the mesh
     int number_mesh_faces = array_length(global_mesh.faces);
     for (int i = 0; i < number_mesh_faces; i++) {
         Face mesh_face = global_mesh.faces[i];
